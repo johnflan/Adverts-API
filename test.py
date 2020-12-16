@@ -3,7 +3,7 @@ import requests
 from adverts import Adverts as ad
 
 url = 'https://www.adverts.ie/for-sale/county-Dublin/price_0/page-1'
-xi = ad()
+xi = ad(county='Dublin')
 print(xi.get())
 
 # soup = bs.BeautifulSoup(response.text, 'html.parser')

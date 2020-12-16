@@ -12,8 +12,7 @@ class Adverts:
         self.max_price = max_price
         self.view = view
         self.keywords = keywords
-        self.url = 'https://google.com'
-        self.generateUrl()
+        self.url = self.generateUrl()
     # def get_items(self):
 
     def get(self):
@@ -21,7 +20,7 @@ class Adverts:
 
 
     def generateUrl(self):
-        print(f"https://www.adverts.ie/for-sale/{f'{self.category}/' if self.category != None else ''}{f'{self.county}/' if self.county != None else ''}{f''}{self.view}/page-1/")
+        return f"https://www.adverts.ie/for-sale/{f'{self.category}/' if self.category != None else ''}{f'{self.county}/' if self.county != None else ''}{f'price_{self.min_price}-{self.max_price}/' if self.max_price > self.min_price else f'price_{self.min_price}/'}{self.view}/page-1/"
 
 
 '''
