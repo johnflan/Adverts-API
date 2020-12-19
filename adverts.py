@@ -19,18 +19,36 @@ class Adverts:
         panels = soup.find_all('div', class_='sr-grid-cell quick-peek-container')
 
         for panel in panels:
-            print(panel.findChildren())
+            ad = {
+                'price': panel.select("div[class='price'] > a")[0].text.strip(),
+                'title': panel.select("div[class='title'] > a")[0].text.strip(),
+                'area': panel.select("div[class='location'] > a")[0].text.strip(),
+                'county': panel.select("div[class='location'] > a")[1].text.strip(),
+                'category': 1
+            }
+            print(panel.select("div[class='price'] > a")[0].text.strip())
+
+            print(panel.select("div[class='title'] > a")[0].text.strip())
+
+            print(panel.select("div[class='location'] > a")[0].text.strip())
+            print(panel.select("div[class='location'] > a")[1].text.strip())
+
+            print(panel.select("div[class='location'] > a")[0]['href'].split('/')[2:-4])
+                
+            print('======================================')
+                
 
     def ads(self):
         panels = self.get()
         return bs.BeautifulSoup(panels, 'html.parser')
 
     def get(self):
+        print(self.url)
         return requests.get(self.url).text
 
 
     def generateUrl(self):
-        return f"https://www.adverts.ie/for-sale/{f'{self.category}/' if self.category != None else ''}{f'{self.county}/' if self.county != None else ''}{f'price_{self.min_price}-{self.max_price}/' if self.max_price > self.min_price else f'price_{self.min_price}/'}{self.view}/page-1/"
+        return f"https://www.adverts.ie/for-sale/{f'{self.category}/' if self.category != None else ''}{f'county-{self.county}/' if self.county != None else ''}{f'price_{self.min_price}-{self.max_price}/' if self.max_price > self.min_price else f'price_{self.min_price}/'}{self.view}/page-1/"
 
 
 '''
