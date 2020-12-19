@@ -14,6 +14,38 @@ class Adverts:
         self.keywords = keywords
         self.url = self.generate_url()
 
+    def search_category(self):
+        '''
+        categories:
+            Antiques-Collectables
+            Art-Crafts
+            Baby-Nursery
+            Books-Magazines
+            Business-Office
+            Cars-Motorbikes-Boats
+            Clothes-Shoes-Accessories
+            Computers
+            Consoles-Games
+            Crazy-Random-Stuff
+            DIY-Renovation
+            DVD-CD-Movies
+            Electronics
+            Farming
+            Health-Beauty
+            Home-Garden
+            Jewellery-Watches
+            Jobs
+            Mobile-Phones-Accessories
+            Music-Instruments-Equipment
+            Pets
+            Photography
+            Services
+            Sports-Fitness
+            Tickets
+            Toys-Games
+            Wedding
+        '''
+
     def get_ad_panel(self):
         soup = self.ads()
         panels = soup.find_all('div', class_='sr-grid-cell quick-peek-container')
@@ -42,35 +74,3 @@ class Adverts:
 
     def generate_url(self):
         return f"https://www.adverts.ie/for-sale/{f'{self.category}/' if self.category != None else ''}{f'county-{self.county}/' if self.county != None else ''}{f'price_{self.min_price}-{self.max_price}/' if self.max_price > self.min_price else f'price_{self.min_price}/'}{self.view}/page-1/"
-
-
-'''
-categories:
-    Antiques-Collectables
-    Art-Crafts
-    Baby-Nursery
-    Books-Magazines
-    Business-Office
-    Cars-Motorbikes-Boats
-    Clothes-Shoes-Accessories
-    Computers
-    Consoles-Games
-    Crazy-Random-Stuff
-    DIY-Renovation
-    DVD-CD-Movies
-    Electronics
-    Farming
-    Health-Beauty
-    Home-Garden
-    Jewellery-Watches
-    Jobs
-    Mobile-Phones-Accessories
-    Music-Instruments-Equipment
-    Pets
-    Photography
-    Services
-    Sports-Fitness
-    Tickets
-    Toys-Games
-    Wedding
-'''
