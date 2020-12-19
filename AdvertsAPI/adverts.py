@@ -14,37 +14,8 @@ class Adverts:
         self.keywords = keywords
         self.url = self.generate_url()
 
-    def search_category(self):
-        '''
-        categories:
-            Antiques-Collectables
-            Art-Crafts
-            Baby-Nursery
-            Books-Magazines
-            Business-Office
-            Cars-Motorbikes-Boats
-            Clothes-Shoes-Accessories
-            Computers
-            Consoles-Games
-            Crazy-Random-Stuff
-            DIY-Renovation
-            DVD-CD-Movies
-            Electronics
-            Farming
-            Health-Beauty
-            Home-Garden
-            Jewellery-Watches
-            Jobs
-            Mobile-Phones-Accessories
-            Music-Instruments-Equipment
-            Pets
-            Photography
-            Services
-            Sports-Fitness
-            Tickets
-            Toys-Games
-            Wedding
-        '''
+    # def search_category(self):
+        
 
     def get_ad_panel(self):
         soup = self.ads()
