@@ -1,5 +1,9 @@
-from adverts import Adverts as ad
+import sys 
+sys.path.append('./')
 
-advert = ad(county='Dublin')
+import AdvertsAPI as ads
+from AdvertsAPI.utils import pretty_json
 
-print(advert.get_ad_panel())
+advert = ads.AdvertsAPI(county='Dublin')
+
+print(pretty_json(advert.get_ad_panel()))
