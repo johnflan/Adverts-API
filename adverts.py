@@ -24,18 +24,13 @@ class Adverts:
                 'title': panel.select("div[class='title'] > a")[0].text.strip(),
                 'area': panel.select("div[class='location'] > a")[0].text.strip(),
                 'county': panel.select("div[class='location'] > a")[1].text.strip(),
-                'category': 1
+                'category': panel.select("div[class='location'] > a")[0]['href'].split('/')[2:-4],
+                'url': f"""https://adverts.ie{panel.select("div[class='price'] > a")[0]['href']}"""
             }
-            print(panel.select("div[class='price'] > a")[0].text.strip())
-
-            print(panel.select("div[class='title'] > a")[0].text.strip())
-
-            print(panel.select("div[class='location'] > a")[0].text.strip())
-            print(panel.select("div[class='location'] > a")[1].text.strip())
-
-            print(panel.select("div[class='location'] > a")[0]['href'].split('/')[2:-4])
                 
-            print('======================================')
+            print('==================================================================================================================')
+
+            print(ad)
                 
 
     def ads(self):
