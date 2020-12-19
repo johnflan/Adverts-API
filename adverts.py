@@ -13,7 +13,17 @@ class Adverts:
         self.view = view
         self.keywords = keywords
         self.url = self.generateUrl()
-    # def get_items(self):
+
+    def get_ad_panel(self):
+        soup = self.ads()
+        panels = soup.find_all('div', class_='sr-grid-cell quick-peek-container')
+
+        for panel in panels:
+            print(panel.findChildren())
+
+    def ads(self):
+        panels = self.get()
+        return bs.BeautifulSoup(panels, 'html.parser')
 
     def get(self):
         return requests.get(self.url).text
