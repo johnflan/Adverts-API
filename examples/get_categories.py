@@ -1,5 +1,9 @@
+import sys 
+sys.path.append('./')
+
 import bs4 as bs
 import requests
+from AdvertsAPI.category import Category
 
 
 def get_cat(url):
@@ -16,19 +20,17 @@ def recurse_cat(url):
             return
 
     for re in res:
-        print(re)
+        var_name = ('__'.join(re.replace('-', '_').split('/')[2:-2])).upper()
+        var = f"{var_name} = '{re}'"
+        print(var)
+        # print(re.split('/'))
         recurse_cat(base_url + re)
 
 
 initial_url = 'https://www.adverts.ie/for-sale'
 base_url = 'https://www.adverts.ie'
 
-print('in')
 recurse_cat(initial_url)
-
-
-        
-        
 
 # [1]
 # [1, 2, 3, 4, 5, 6, 7, 8]
