@@ -38,9 +38,12 @@ class AdvertsAPI:
     def login(self, username, password):
         self.br.set_handle_robots(False)
         self.br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1')]
+
         self.br.set_cookiejar(self.cj)
         self.br.open(self.__login_url)
+
         self.br.select_form(id="login_form")
+
         self.br.form['authuser'] = username
         self.br.form['password'] = password
         response = self.br.submit()
@@ -58,6 +61,42 @@ class AdvertsAPI:
             print('logged out')
         else:
             print('you arent logged in')
+
+
+    def place_offer(self, ad_url, offer):
+        if self.__loggedIn is not True:
+            print('You need to be logged in to place an offer')
+            return
+
+        self.br.open(ad_url)
+
+        self.br.select_form(predicate=lambda f: f.attrs.get('id', None) == 'make_offer_form')
+       
+        self.br.form['offer'] = offer
+        resz = self.br.submit()
+        print(resz.read().decode('utf-8'))
+
+        print('complete')
+
+
+    def comment_on_ad(self):
+        print('void')
+
+
+    def leave_feedback(self):
+        print('void')
+
+    
+    def download_ad_images(self):
+        print('void')
+
+
+    def full_ad_info(self):
+        print('void')
+
+
+    def newest_ad(self):
+        print('void')
 
 
     def get_ad_panel(self):
@@ -78,7 +117,7 @@ class AdvertsAPI:
                     )
 
         return ad
-                
+
 
     def __bsoup(self):
         return bs.BeautifulSoup(self.__get(), 'html.parser')
