@@ -5,6 +5,9 @@ from AdvertsAPI.product_info import ProductInfo
 # import http.cookiejar     ## FOR LOGINS
 
 class AdvertsAPI:
+
+    __loggedIn = False
+
     def __init__(self, category=None, county=None, min_price=0, max_price=0, view='grid_view', keywords=None):
         super().__init__()
         self.category = category
@@ -13,11 +16,16 @@ class AdvertsAPI:
         self.max_price = max_price
         self.view = view
         self.keywords = keywords
-        self.url = self.generate_url()
+        self.url = self.__generate_url()
+
+    
+    def login(self, username, password):
+        # login (somehow)
+        __loggedIn = True
         
 
     def get_ad_panel(self):
-        soup = self.ads()
+        soup = self.__ads()
         panels = soup.find_all('div', class_='sr-grid-cell quick-peek-container')
         ad = []
         
@@ -44,13 +52,13 @@ class AdvertsAPI:
         return ad
                 
 
-    def ads(self):
-        return bs.BeautifulSoup(self.get(), 'html.parser')
+    def __ads(self):
+        return bs.BeautifulSoup(self.__get(), 'html.parser')
 
 
-    def get(self):
+    def __get(self):
         return requests.get(self.url).text
 
 
-    def generate_url(self):
+    def __generate_url(self):
         return f"https://www.adverts.ie/for-sale/{f'{self.category}/' if self.category != None else ''}{f'county-{self.county}/' if self.county != None else ''}{f'price_{self.min_price}-{self.max_price}/' if self.max_price > self.min_price else f'price_{self.min_price}/'}{self.view}/page-1/"
