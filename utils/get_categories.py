@@ -1,10 +1,5 @@
-import sys 
-sys.path.append('./')
-
 import bs4 as bs
 import requests
-from AdvertsAPI.category import Category
-
 
 def get_cat(url):
     response = requests.get(url).text
