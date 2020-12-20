@@ -1108,34 +1108,3 @@ class Category:
     WEDDING__GROOM = '/for-sale/wedding/groom/646/'
     WEDDING__DRESSES = '/for-sale/wedding/dresses/121/'
     WEDDING__OTHER = '/for-sale/wedding/other/483/'
-
-    '''
-    categories:
-        Antiques-Collectables
-        Art-Crafts
-        Baby-Nursery
-        Books-Magazines
-        Business-Office
-        Cars-Motorbikes-Boats
-        Clothes-Shoes-Accessories
-        Computers
-        Consoles-Games
-        Crazy-Random-Stuff
-        DIY-Renovation
-        DVD-CD-Movies
-        Electronics
-        Farming
-        Health-Beauty
-        Home-Garden
-        Jewellery-Watches
-        Jobs
-        Mobile-Phones-Accessories
-        Music-Instruments-Equipment
-        Pets
-        Photography
-        Services
-        Sports-Fitness
-        Tickets
-        Toys-Games
-        Wedding
-    '''

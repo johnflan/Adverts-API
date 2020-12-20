@@ -1,8 +1,11 @@
+import http.cookiejar
+
 import bs4 as bs
+import mechanize
 import requests
+
 from AdvertsAPI.product_info import ProductInfo
-import mechanize          ## FOR LOGINS
-import http.cookiejar     ## FOR LOGINS
+
 
 class AdvertsAPI:
 
@@ -30,7 +33,6 @@ class AdvertsAPI:
         self.url = self.__generate_url()
         self.cj = http.cookiejar.CookieJar()
         self.br = mechanize.Browser()
-
 
     
     def login(self, username, password):
