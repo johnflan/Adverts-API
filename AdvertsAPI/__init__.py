@@ -1,5 +1,6 @@
 import bs4 as bs
 import requests
+from AdvertsAPI.product_info import ProductInfo
 # import mechanize          ## FOR LOGINS
 # import http.cookiejar     ## FOR LOGINS
 
@@ -21,14 +22,24 @@ class AdvertsAPI:
         ad = []
         
         for panel in panels:
-            ad.append({
-                'price': panel.select("div[class='price'] > a")[0].text.strip(),
-                'title': panel.select("div[class='title'] > a")[0].text.strip(),
-                'area': panel.select("div[class='location'] > a")[0].text.strip(),
-                'county': panel.select("div[class='location'] > a")[1].text.strip(),
-                'category': panel.select("div[class='location'] > a")[0]['href'].split('/')[2:-4],
-                'url': f"""https://adverts.ie{panel.select("div[class='price'] > a")[0]['href']}"""
-            })
+            ad.append(
+                ProductInfo(
+                    panel.select("div[class='price'] > a")[0].text.strip(),
+                    panel.select("div[class='title'] > a")[0].text.strip(), 
+                    panel.select("div[class='location'] > a")[0].text.strip(), 
+                    panel.select("div[class='location'] > a")[1].text.strip(), 
+                    panel.select("div[class='location'] > a")[0]['href'].split('/')[2:-4], 
+                    f"""https://adverts.ie{panel.select("div[class='price'] > a")[0]['href']}"""
+                            )
+                    )
+            # ad.append({
+            #     'price': panel.select("div[class='price'] > a")[0].text.strip(),
+            #     'title': panel.select("div[class='price'] > a")[0].text.strip(),
+            #     'area': panel.select("div[class='location'] > a")[0].text.strip(),
+            #     'county': panel.select("div[class='location'] > a")[1].text.strip(),
+            #     'category': panel.select("div[class='location'] > a")[0]['href'].split('/')[2:-4],
+            #     'url': f"""https://adverts.ie{panel.select("div[class='price'] > a")[0]['href']}"""
+            # })
                 
         return ad
                 
