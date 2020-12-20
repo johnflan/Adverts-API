@@ -1,8 +1,8 @@
 import bs4 as bs
 import requests
 from AdvertsAPI.product_info import ProductInfo
-# import mechanize          ## FOR LOGINS
-# import http.cookiejar     ## FOR LOGINS
+import mechanize          ## FOR LOGINS
+import http.cookiejar     ## FOR LOGINS
 
 class AdvertsAPI:
 
@@ -32,7 +32,22 @@ class AdvertsAPI:
     
     def login(self, username, password):
         # login (somehow)
-        self.__loggedIn = True
+        cj = http.cookiejar.CookieJar()
+        br = mechanize.Browser()
+        br.set_handle_robots(False)
+        br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1')]
+        br.set_cookiejar(cj)
+        br.open(self.__login_url)
+        br.select_form(id="login_form")
+        br.form['authuser'] = username
+        br.form['password'] = password
+        response = br.submit()
+
+        if "        Sorry, we don't recognize that email or password. Please try again!    " in response.read().decode('utf-8'):
+            print('unsuccessful')
+        else:
+            print('successful')
+            self.__loggedIn = True
     
 
     def logout(self):
@@ -44,7 +59,7 @@ class AdvertsAPI:
 
 
     def get_ad_panel(self):
-        soup = self.__ads()
+        soup = self.__bsoup()
         panels = soup.find_all('div', class_='sr-grid-cell quick-peek-container')
         ad = []
         
@@ -59,24 +74,19 @@ class AdvertsAPI:
                     f"""https://adverts.ie{panel.select(self.__url_tag)[0]['href']}"""
                             )
                     )
-            # ad.append({
-            #     'price': panel.select("div[class='price'] > a")[0].text.strip(),
-            #     'title': panel.select("div[class='price'] > a")[0].text.strip(),
-            #     'area': panel.select("div[class='location'] > a")[0].text.strip(),
-            #     'county': panel.select("div[class='location'] > a")[1].text.strip(),
-            #     'category': panel.select("div[class='location'] > a")[0]['href'].split('/')[2:-4],
-            #     'url': f"""https://adverts.ie{panel.select("div[class='price'] > a")[0]['href']}"""
-            # })
-                
+
         return ad
                 
 
-    def __ads(self):
+    def __bsoup(self):
         return bs.BeautifulSoup(self.__get(), 'html.parser')
 
 
-    def __get(self):
-        return requests.get(self.url).text
+    def __get(self, url=None):
+        if url is None:
+            url = self.url
+            
+        return requests.get(url).text
 
 
     def __generate_url(self):
