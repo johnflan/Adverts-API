@@ -6,7 +6,18 @@ from AdvertsAPI.product_info import ProductInfo
 
 class AdvertsAPI:
 
+    __base_url = 'https://www.adverts.ie/for-sale/'
+
+    __login_url = 'https://www.adverts.ie/login'
+    __logout_url = 'https://www.adverts.ie/logout'
     __loggedIn = False
+
+    __price_tag = "div[class='price'] > a"
+    __title_tag = "div[class='title'] > a"
+    __area_Tag = "div[class='location'] > a"
+    __county_tag = "div[class='location'] > a"
+    __category_tag = "div[class='location'] > a"
+    __url_tag = "div[class='price'] > a"
 
     def __init__(self, category=None, county=None, min_price=0, max_price=0, view='grid_view', keywords=None):
         super().__init__()
@@ -21,7 +32,7 @@ class AdvertsAPI:
     
     def login(self, username, password):
         # login (somehow)
-        __loggedIn = True
+        self.__loggedIn = True
         
 
     def get_ad_panel(self):
@@ -32,12 +43,12 @@ class AdvertsAPI:
         for panel in panels:
             ad.append(
                 ProductInfo(
-                    panel.select("div[class='price'] > a")[0].text.strip(),
-                    panel.select("div[class='title'] > a")[0].text.strip(), 
-                    panel.select("div[class='location'] > a")[0].text.strip(), 
-                    panel.select("div[class='location'] > a")[1].text.strip(), 
-                    panel.select("div[class='location'] > a")[0]['href'].split('/')[2:-4], 
-                    f"""https://adverts.ie{panel.select("div[class='price'] > a")[0]['href']}"""
+                    panel.select(self.__price_tag)[0].text.strip(),
+                    panel.select(self.__title_tag)[0].text.strip(), 
+                    panel.select(self.__area_Tag)[0].text.strip(), 
+                    panel.select(self.__county_tag)[1].text.strip(), 
+                    panel.select(self.__category_tag)[0]['href'].split('/')[2:-4], 
+                    f"""https://adverts.ie{panel.select(self.__url_tag)[0]['href']}"""
                             )
                     )
             # ad.append({
@@ -61,4 +72,4 @@ class AdvertsAPI:
 
 
     def __generate_url(self):
-        return f"https://www.adverts.ie/for-sale/{f'{self.category}/' if self.category != None else ''}{f'county-{self.county}/' if self.county != None else ''}{f'price_{self.min_price}-{self.max_price}/' if self.max_price > self.min_price else f'price_{self.min_price}/'}{self.view}/page-1/"
+        return f"{self.__base_url}{f'{self.category}/' if self.category != None else ''}{f'county-{self.county}/' if self.county != None else ''}{f'price_{self.min_price}-{self.max_price}/' if self.max_price > self.min_price else f'price_{self.min_price}/'}{self.view}/page-1/"
