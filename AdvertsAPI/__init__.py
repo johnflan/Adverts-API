@@ -52,8 +52,8 @@ class AdvertsAPI:
 
     def logout(self):
         if self.__loggedIn == True:
-            # logout figure out later!!!
-            print('logging out')
+            self.br.open(self.__logout_url)
+            print('logged out')
         else:
             print('you arent logged in')
 
