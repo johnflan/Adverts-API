@@ -3,9 +3,10 @@ import http.cookiejar
 import bs4 as bs
 import mechanize
 import requests
+import os
 
 from AdvertsAPI.product_info import ProductInfo
-
+from selenium import webdriver
 
 class AdvertsAPI:
 
@@ -33,6 +34,8 @@ class AdvertsAPI:
         self.url = self.__generate_url()
         self.cj = http.cookiejar.CookieJar()
         self.br = mechanize.Browser()
+        self.driver = self.__init_browser()
+        print(os.getcwd())
 
     
     def login(self, username, password):
@@ -58,6 +61,7 @@ class AdvertsAPI:
     def logout(self):
         if self.__loggedIn == True:
             self.br.open(self.__logout_url)
+            self.driver.close()
             print('logged out')
         else:
             print('you arent logged in')
@@ -117,6 +121,25 @@ class AdvertsAPI:
                     )
 
         return ad
+
+    
+    def __init_browser(self):
+        user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36"
+
+        options = webdriver.ChromeOptions()
+        options.headless = True
+        options.add_argument(f'user-agent={user_agent}')
+        options.add_argument("--window-size=1920,1080")
+        options.add_argument('--ignore-certificate-errors')
+        options.add_argument('--allow-running-insecure-content')
+        options.add_argument("--disable-extensions")
+        options.add_argument("--proxy-server='direct://'")
+        options.add_argument("--proxy-bypass-list=*")
+        options.add_argument("--start-maximized")
+        options.add_argument('--disable-gpu')
+        options.add_argument('--disable-dev-shm-usage')
+        options.add_argument('--no-sandbox')
+        return webdriver.Chrome(executable_path="./AdvertsAPI/chromedriver.exe", options=options)
 
 
     def __bsoup(self):
