@@ -33,7 +33,15 @@ class AdvertsAPI:
     def login(self, username, password):
         # login (somehow)
         self.__loggedIn = True
-        
+    
+
+    def logout(self):
+        if self.__loggedIn == True:
+            # logout figure out later!!!
+            print('logging out')
+        else:
+            print('you arent logged in')
+
 
     def get_ad_panel(self):
         soup = self.__ads()
