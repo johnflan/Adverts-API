@@ -34,34 +34,37 @@ class AdvertsAPI:
         self.url = self.__generate_url()
         self.cj = http.cookiejar.CookieJar()
         self.br = mechanize.Browser()
-        self.driver = self.__init_browser()
-        print(os.getcwd())
+        self.driver = None
 
     
     def login(self, username, password):
-        self.br.set_handle_robots(False)
-        self.br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1')]
+        self.driver = self.__init_browser()
 
-        self.br.set_cookiejar(self.cj)
-        self.br.open(self.__login_url)
+        self.driver.get(self.__login_url)
+        privacy_agree_all = self.driver.find_element_by_xpath("//*[@id='js-cookie-modal-level-one']/div/main/div/button[2]")
+        privacy_agree_all.click()
 
-        self.br.select_form(id="login_form")
+        username_input = self.driver.find_element_by_xpath("//*[@id='email']")
+        username_input.send_keys(username)
 
-        self.br.form['authuser'] = username
-        self.br.form['password'] = password
-        response = self.br.submit()
+        password_input = self.driver.find_element_by_xpath("//*[@id='password']")
+        password_input.send_keys(password)
 
-        if "        Sorry, we don't recognize that email or password. Please try again!    " in response.read().decode('utf-8'):
-            print('unsuccessful')
-        else:
-            print('successful')
+        submit_login = self.driver.find_element_by_xpath("//*[@id='login_form']/div[4]/input")
+        submit_login.click()
+
+        try:
+            x = self.driver.find_element_by_xpath("//*[@id='profile_details']/dl/dt[2]")
             self.__loggedIn = True
+            print('Successfully logged in')
+        except:
+            print('Invalid username or password')
     
 
     def logout(self):
         if self.__loggedIn == True:
-            self.br.open(self.__logout_url)
-            self.driver.close()
+            self.driver.get(self.__logout_url)
+            self.driver.quit()
             print('logged out')
         else:
             print('you arent logged in')
@@ -72,30 +75,24 @@ class AdvertsAPI:
             print('You need to be logged in to place an offer')
             return
 
-        self.br.open(ad_url)
 
-        self.br.select_form(predicate=lambda f: f.attrs.get('id', None) == 'make_offer_form')
-       
-        self.br.form['offer'] = offer
-        resz = self.br.submit()
-        print(resz.read().decode('utf-8'))
-
-        print('complete')
+    def comment_on_ad(self, ad_url, comment):
+        if self.__loggedIn is not True:
+            print('You need to be logged in to comment on ad')
+            return
 
 
-    def comment_on_ad(self):
-        print('void')
-
-
-    def leave_feedback(self):
-        print('void')
+    def leave_feedback(self, ad_url, message):
+        if self.__loggedIn is not True:
+            print('You need to be logged in to leave feedback')
+            return
 
     
     def download_ad_images(self):
         print('void')
 
 
-    def full_ad_info(self):
+    def full_ad_info(self, ad_url):
         print('void')
 
 
@@ -127,7 +124,7 @@ class AdvertsAPI:
         user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36"
 
         options = webdriver.ChromeOptions()
-        options.headless = True
+        # options.headless = True
         options.add_argument(f'user-agent={user_agent}')
         options.add_argument("--window-size=1920,1080")
         options.add_argument('--ignore-certificate-errors')
