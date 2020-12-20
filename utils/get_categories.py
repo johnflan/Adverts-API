@@ -22,8 +22,12 @@ def recurse_cat(url):
     for re in res:
         var_name = ('__'.join(re.replace('-', '_').split('/')[2:-2])).upper()
         var = f"{var_name} = '{re}'"
-        print(var)
-        # print(re.split('/'))
+
+        # Can be faster... 
+        myfile = open('categories.txt', 'a+')
+        myfile.writelines(var + '\n')
+        myfile.close()
+
         recurse_cat(base_url + re)
 
 
