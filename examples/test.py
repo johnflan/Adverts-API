@@ -13,6 +13,7 @@ with open('secret.json', 'r') as f:
     username = js['username']
     password = js['password']
 
-# print(advert.get_ad_panel()[0].url)
+ad0 = advert.get_ad_panel()[0]
 advert.login(username, password)
+advert.place_offer('https://www.adverts.ie/laptops/hp-pavilion/22443298', '260')
 advert.logout()

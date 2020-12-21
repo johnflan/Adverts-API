@@ -7,6 +7,7 @@ import os
 
 from AdvertsAPI.product_info import ProductInfo
 from selenium import webdriver
+from time import sleep
 
 class AdvertsAPI:
 
@@ -74,6 +75,14 @@ class AdvertsAPI:
         if self.__loggedIn is not True:
             print('You need to be logged in to place an offer')
             return
+        
+        self.driver.get(ad_url)
+        offer_input1 = self.driver.find_element_by_xpath("/html/body/div[5]/div[1]/div/div[2]/div[3]/div[2]/span[2]/form/input[1]").send_keys(str(offer))
+
+        self.driver.find_element_by_xpath("//*[@id='new_offer_btn']").click()
+
+        sleep(2)
+        self.driver.find_element_by_xpath("/html/body/div/div/div/div[3]/div/form/div[3]/input").click()
 
 
     def comment_on_ad(self, ad_url, comment):
