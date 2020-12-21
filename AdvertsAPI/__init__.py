@@ -119,7 +119,7 @@ class AdvertsAPI:
         if self.__loggedIn is not True:
             print('You need to be logged in to leave feedback')
             return
-
+        
     
     def download_ad_images(self):
         print('void')
