@@ -11,7 +11,9 @@ from time import sleep
 
 class AdvertsAPI:
 
+    __adverts_url = 'https://www.adverts.ie/'
     __base_url = 'https://www.adverts.ie/for-sale/'
+    __base_offer_url = 'https://www.adverts.ie/offer.php?'
 
     __login_url = 'https://www.adverts.ie/login'
     __logout_url = 'https://www.adverts.ie/logout'
@@ -39,33 +41,57 @@ class AdvertsAPI:
 
     
     def login(self, username, password):
-        self.driver = self.__init_browser()
+        # self.driver = self.__init_browser()
 
-        self.driver.get(self.__login_url)
-        privacy_agree_all = self.driver.find_element_by_xpath("//*[@id='js-cookie-modal-level-one']/div/main/div/button[2]")
-        privacy_agree_all.click()
+        # self.driver.get(self.__login_url)
+        # privacy_agree_all = self.driver.find_element_by_xpath("//*[@id='js-cookie-modal-level-one']/div/main/div/button[2]")
+        # privacy_agree_all.click()
 
-        username_input = self.driver.find_element_by_xpath("//*[@id='email']")
-        username_input.send_keys(username)
+        # username_input = self.driver.find_element_by_xpath("//*[@id='email']")
+        # username_input.send_keys(username)
 
-        password_input = self.driver.find_element_by_xpath("//*[@id='password']")
-        password_input.send_keys(password)
+        # password_input = self.driver.find_element_by_xpath("//*[@id='password']")
+        # password_input.send_keys(password)
 
-        submit_login = self.driver.find_element_by_xpath("//*[@id='login_form']/div[4]/input")
-        submit_login.click()
+        # submit_login = self.driver.find_element_by_xpath("//*[@id='login_form']/div[4]/input")
+        # submit_login.click()
 
-        try:
-            x = self.driver.find_element_by_xpath("//*[@id='profile_details']/dl/dt[2]")
+        # try:
+        #     x = self.driver.find_element_by_xpath("//*[@id='profile_details']/dl/dt[2]")
+        #     self.__loggedIn = True
+        #     print('Successfully logged in')
+        # except:
+        #     print('Invalid username or password')
+        
+        self.br.set_handle_robots(False)
+        self.br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1')]
+
+        self.br.set_cookiejar(self.cj)
+        self.br.open(self.__login_url)
+
+        self.br.select_form(id="login_form")
+
+        self.br.form['authuser'] = username
+        self.br.form['password'] = password
+        response = self.br.submit()
+
+        if "        Sorry, we don't recognize that email or password. Please try again!    " in response.read().decode('utf-8'):
+            print('unsuccessful')
+        else:
+            print('successful')
             self.__loggedIn = True
-            print('Successfully logged in')
-        except:
-            print('Invalid username or password')
     
 
     def logout(self):
+        # if self.__loggedIn == True:
+        #     self.driver.get(self.__logout_url)
+        #     self.driver.quit()
+        #     print('logged out')
+        # else:
+        #     print('you arent logged in')
+        
         if self.__loggedIn == True:
-            self.driver.get(self.__logout_url)
-            self.driver.quit()
+            self.br.open(self.__logout_url)
             print('logged out')
         else:
             print('you arent logged in')
@@ -76,14 +102,12 @@ class AdvertsAPI:
             print('You need to be logged in to place an offer')
             return
         
-        self.driver.get(ad_url)
-        offer_input1 = self.driver.find_element_by_xpath("/html/body/div[5]/div[1]/div/div[2]/div[3]/div[2]/span[2]/form/input[1]").send_keys(str(offer))
+        offer_url = self.__generate_offer_url(ad_url, offer)
+        self.br.open(offer_url)
 
-        self.driver.find_element_by_xpath("//*[@id='new_offer_btn']").click()
-
-        sleep(2)
-        self.driver.find_element_by_xpath("/html/body/div/div/div/div[3]/div/form/div[3]/input").click()
-
+        self.br.select_form(nr=0)
+        self.br.submit()
+    
 
     def comment_on_ad(self, ad_url, comment):
         if self.__loggedIn is not True:
@@ -127,6 +151,10 @@ class AdvertsAPI:
                     )
 
         return ad
+    
+
+    def __generate_offer_url(self, ad_url, offer):
+        return f"""{self.__base_offer_url}item_id={ad_url.split('/').pop()}&offer={str(offer)}&modal_parent_uri={'%2F'.join(ad_url.replace(self.__adverts_url, '').split('/')[:-1])}"""
 
     
     def __init_browser(self):
