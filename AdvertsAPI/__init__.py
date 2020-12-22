@@ -126,7 +126,30 @@ class AdvertsAPI:
 
 
     def full_ad_info(self, ad_url):
-        print('void')
+        ad_info = self.__bsoup(ad_url)
+        
+        title = ad_info.findAll("h1", {"class": "page_heading"})[0].text.strip()
+        price = ad_info.findAll("span", {"class": "ad_view_info_cell"})[0].text.strip()
+        seller = ad_info.findAll("a", {"class": "inverted sellername"})[0].text.strip()
+        positive = ad_info.findAll("span", {"class": "positive"})[0].text.strip()
+        negative = ad_info.findAll("span", {"class": "negative"})[0].text.strip()
+        location = ad_info.findAll("dd", {"class": "ad_view_info_cell"})[2].text.strip()
+
+        date_entered = ad_info.findAll("dd", {"class": "ad_view_info_cell"})[3].text.strip()
+        ad_views = ad_info.findAll("dd", {"class": "ad_view_info_cell"})[4].text.strip()
+        description = ad_info.findAll("div", {"class": "main-description"})[0].text.strip()
+        # comments = ad_info.findAll("div", {"id": "user-comments-holder"})
+
+        print(title)
+        print(price)
+        print(positive)
+        print(negative)
+        print(seller)
+        print(location)
+        print(date_entered)
+        print(ad_views)
+        print(description)
+        # print(comments[0])
 
 
     def newest_ad(self):
@@ -176,8 +199,8 @@ class AdvertsAPI:
         return webdriver.Chrome(executable_path="./AdvertsAPI/chromedriver.exe", options=options)
 
 
-    def __bsoup(self):
-        return bs.BeautifulSoup(self.__get(), 'html.parser')
+    def __bsoup(self, soup_url=None):
+        return bs.BeautifulSoup(self.__get(soup_url), 'html.parser')
 
 
     def __get(self, url=None):
