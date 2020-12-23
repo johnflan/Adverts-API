@@ -6,12 +6,14 @@ import requests
 import os
 
 from AdvertsAPI.product_info import ProductInfo
+from AdvertsAPI.ad_info import AdInfo
 
 class AdvertsAPI:
 
     __adverts_url = 'https://www.adverts.ie/'
     __base_url = 'https://www.adverts.ie/for-sale/'
     __base_offer_url = 'https://www.adverts.ie/offer.php?'
+    __base_withdraw_url = 'https://www.adverts.ie/withdrawoffer.php?action=withdraw'
 
     __login_url = 'https://www.adverts.ie/login'
     __logout_url = 'https://www.adverts.ie/logout'
@@ -39,28 +41,6 @@ class AdvertsAPI:
 
     
     def login(self, username, password):
-        # self.driver = self.__init_browser()
-
-        # self.driver.get(self.__login_url)
-        # privacy_agree_all = self.driver.find_element_by_xpath("//*[@id='js-cookie-modal-level-one']/div/main/div/button[2]")
-        # privacy_agree_all.click()
-
-        # username_input = self.driver.find_element_by_xpath("//*[@id='email']")
-        # username_input.send_keys(username)
-
-        # password_input = self.driver.find_element_by_xpath("//*[@id='password']")
-        # password_input.send_keys(password)
-
-        # submit_login = self.driver.find_element_by_xpath("//*[@id='login_form']/div[4]/input")
-        # submit_login.click()
-
-        # try:
-        #     x = self.driver.find_element_by_xpath("//*[@id='profile_details']/dl/dt[2]")
-        #     self.__loggedIn = True
-        #     print('Successfully logged in')
-        # except:
-        #     print('Invalid username or password')
-        
         self.br.set_handle_robots(False)
         self.br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1')]
 
@@ -81,13 +61,6 @@ class AdvertsAPI:
     
 
     def logout(self):
-        # if self.__loggedIn == True:
-        #     self.driver.get(self.__logout_url)
-        #     self.driver.quit()
-        #     print('logged out')
-        # else:
-        #     print('you arent logged in')
-        
         if self.__loggedIn == True:
             self.br.open(self.__logout_url)
             print('logged out')
@@ -107,6 +80,22 @@ class AdvertsAPI:
         self.br.submit()
     
 
+    def withdraw_offer(self, ad_url):
+        if self.__loggedIn is not True:
+            print('You need to be logged in to withdraw an offer')
+            return
+        
+        myurl = self.__generate_withdraw_url(ad_url)
+
+        print(myurl)
+        self.br.open(ad_url)
+
+        try:
+            self.br.submit()
+        except:
+            print('You dont have any offers')
+
+
     def comment_on_ad(self, ad_url, comment):
         if self.__loggedIn is not True:
             print('You need to be logged in to comment on ad')
@@ -124,30 +113,19 @@ class AdvertsAPI:
 
 
     def full_ad_info(self, ad_url):
-        ad_info = self.__bsoup(ad_url)
+        info = self.__bsoup(ad_url)
         
-        title = ad_info.findAll("h1", {"class": "page_heading"})[0].text.strip()
-        price = ad_info.findAll("span", {"class": "ad_view_info_cell"})[0].text.strip()
-        seller = ad_info.findAll("a", {"class": "inverted sellername"})[0].text.strip()
-        positive = ad_info.findAll("span", {"class": "positive"})[0].text.strip()
-        negative = ad_info.findAll("span", {"class": "negative"})[0].text.strip()
-        location = ad_info.findAll("dd", {"class": "ad_view_info_cell"})[2].text.strip()
-
-        date_entered = ad_info.findAll("dd", {"class": "ad_view_info_cell"})[3].text.strip()
-        ad_views = ad_info.findAll("dd", {"class": "ad_view_info_cell"})[4].text.strip()
-        description = ad_info.findAll("div", {"class": "main-description"})[0].text.strip()
-        # comments = ad_info.findAll("div", {"id": "user-comments-holder"})
-
-        print(title)
-        print(price)
-        print(positive)
-        print(negative)
-        print(seller)
-        print(location)
-        print(date_entered)
-        print(ad_views)
-        print(description)
-        # print(comments[0])
+        return AdInfo(
+            info.findAll("h1", {"class": "page_heading"})[0].text.strip(),
+            info.findAll("span", {"class": "ad_view_info_cell"})[0].text.strip(),
+            info.findAll("a", {"class": "inverted sellername"})[0].text.strip(),
+            info.findAll("span", {"class": "positive"})[0].text.strip(),
+            info.findAll("span", {"class": "negative"})[0].text.strip(),
+            info.findAll("dd", {"class": "ad_view_info_cell"})[2].text.strip(),
+            info.findAll("dd", {"class": "ad_view_info_cell"})[3].text.strip(),
+            info.findAll("dd", {"class": "ad_view_info_cell"})[4].text.strip(),
+            info.findAll("div", {"class": "main-description"})[0].text.strip()
+        )
 
 
     def newest_ad(self):
@@ -172,29 +150,24 @@ class AdvertsAPI:
                     )
 
         return ad
+
+    
+    def __generate_withdraw_url(self, ad_url):
+        self.br.open(ad_url)
+        s = bs.BeautifulSoup(self.br.response().read(), 'html.parser')
+
+        try:
+            comment_id = s.findAll("span", {"class": "sprite-btn withdraw-btn offer"})[0].attrs['data-comment-id']
+        except:
+            comment_id = None
+
+        print(comment_id)
+
+        return f"""{self.__base_withdraw_url}&comment_id={comment_id}&modal_parent_uri={'%2F'.join(ad_url.replace(self.__adverts_url, '').split('/')[:-1])}"""
     
 
     def __generate_offer_url(self, ad_url, offer):
         return f"""{self.__base_offer_url}item_id={ad_url.split('/').pop()}&offer={str(offer)}&modal_parent_uri={'%2F'.join(ad_url.replace(self.__adverts_url, '').split('/')[:-1])}"""
-
-    
-    # def __init_browser(self):
-    #     user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36"
-
-    #     options = webdriver.ChromeOptions()
-    #     # options.headless = True
-    #     options.add_argument(f'user-agent={user_agent}')
-    #     options.add_argument("--window-size=1920,1080")
-    #     options.add_argument('--ignore-certificate-errors')
-    #     options.add_argument('--allow-running-insecure-content')
-    #     options.add_argument("--disable-extensions")
-    #     options.add_argument("--proxy-server='direct://'")
-    #     options.add_argument("--proxy-bypass-list=*")
-    #     options.add_argument("--start-maximized")
-    #     options.add_argument('--disable-gpu')
-    #     options.add_argument('--disable-dev-shm-usage')
-    #     options.add_argument('--no-sandbox')
-    #     return webdriver.Chrome(executable_path="./AdvertsAPI/chromedriver.exe", options=options)
 
 
     def __bsoup(self, soup_url=None):
