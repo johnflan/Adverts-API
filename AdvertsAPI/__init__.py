@@ -14,6 +14,7 @@ class AdvertsAPI:
     __base_url = 'https://www.adverts.ie/for-sale/'
     __base_offer_url = 'https://www.adverts.ie/offer.php?'
     __base_withdraw_url = 'https://www.adverts.ie/withdrawoffer.php?action=withdraw'
+    __query_url = 'https://www.adverts.ie/for-sale/q_'
 
     __login_url = 'https://www.adverts.ie/login'
     __logout_url = 'https://www.adverts.ie/logout'
@@ -87,7 +88,6 @@ class AdvertsAPI:
         
         myurl = self.__generate_withdraw_url(ad_url)
 
-        print(myurl)
         self.br.open(ad_url)
 
         try:
@@ -96,21 +96,9 @@ class AdvertsAPI:
             print('You dont have any offers')
 
 
-    def comment_on_ad(self, ad_url, comment):
-        if self.__loggedIn is not True:
-            print('You need to be logged in to comment on ad')
-            return
-
-
-    def leave_feedback(self, ad_url, message):
-        if self.__loggedIn is not True:
-            print('You need to be logged in to leave feedback')
-            return
+    def search(self, query):
+       return self.get_ad_panel(f"""{self.__query_url}{query.replace(' ', '+')}""")
         
-    
-    def download_ad_images(self):
-        print('void')
-
 
     def full_ad_info(self, ad_url):
         info = self.__bsoup(ad_url)
@@ -128,12 +116,11 @@ class AdvertsAPI:
         )
 
 
-    def newest_ad(self):
-        print('void')
-
-
-    def get_ad_panel(self):
-        soup = self.__bsoup()
+    def get_ad_panel(self, url=None):
+        if url is None:
+            soup = self.__bsoup()
+        else:
+            soup = self.__bsoup(url)
         panels = soup.find_all('div', class_='sr-grid-cell quick-peek-container')
         ad = []
         
@@ -160,8 +147,6 @@ class AdvertsAPI:
             comment_id = s.findAll("span", {"class": "sprite-btn withdraw-btn offer"})[0].attrs['data-comment-id']
         except:
             comment_id = None
-
-        print(comment_id)
 
         return f"""{self.__base_withdraw_url}&comment_id={comment_id}&modal_parent_uri={'%2F'.join(ad_url.replace(self.__adverts_url, '').split('/')[:-1])}"""
     

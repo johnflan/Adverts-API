@@ -13,7 +13,7 @@ with open('secret.json', 'r') as f:
     username = js['username']
     password = js['password']
 
-ad0 = advert.get_ad_panel()[0].url
-print(ad0)
 advert.login(username, password)
+ads = advert.search('graphics card')
+print(ads[0].price)
 advert.logout()
