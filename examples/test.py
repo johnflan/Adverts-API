@@ -6,7 +6,7 @@ import json
 import AdvertsAPI as ads
 from AdvertsAPI.utils import pretty_json
 
-advert = ads.AdvertsAPI(county='Dublin')
+advert = ads.AdvertsAPI(county='Dublin', search='graphics card')
 
 with open('secret.json', 'r') as f:
     js = json.load(f)
@@ -14,6 +14,6 @@ with open('secret.json', 'r') as f:
     password = js['password']
 
 advert.login(username, password)
-ads = advert.search('graphics card')
-print(ads[0].price)
+ads = advert.search()
+print(ads[0].title)
 advert.logout()

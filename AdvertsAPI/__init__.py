@@ -27,14 +27,14 @@ class AdvertsAPI:
     __category_tag = "div[class='location'] > a"
     __url_tag = "div[class='price'] > a"
 
-    def __init__(self, category=None, county=None, min_price=0, max_price=0, view='grid_view', keywords=None):
+    def __init__(self, category=None, county=None, min_price=0, max_price=0, view='grid_view', search=None):
         super().__init__()
         self.category = category
         self.county = county
         self.min_price = min_price
         self.max_price = max_price
         self.view = view
-        self.keywords = keywords
+        self.search = search
         self.url = self.__generate_url()
         self.cj = http.cookiejar.CookieJar()
         self.br = mechanize.Browser()
@@ -96,8 +96,10 @@ class AdvertsAPI:
             print('You dont have any offers')
 
 
-    def search(self, query):
-       return self.get_ad_panel(f"""{self.__query_url}{query.replace(' ', '+')}""")
+    def search(self, query=None):
+        if query is None:
+            query = self.search
+        return self.get_ad_panel(f"""{self.__query_url}{query.replace(' ', '+')}""")
         
 
     def full_ad_info(self, ad_url):
