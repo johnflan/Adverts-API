@@ -3,9 +3,9 @@ sys.path.append('./')
 
 import json
 
-import advertsapi as ads
-from advertsapi import category
-from advertsapi.utils import pretty_json
+import AdvertsAPI as ads
+from AdvertsAPI import category
+from AdvertsAPI.utils import pretty_json
 
 advert = ads.AdvertsAPI(county='Dublin')
 

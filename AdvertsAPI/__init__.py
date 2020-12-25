@@ -5,8 +5,8 @@ import mechanize
 import requests
 import os
 
-from advertsapi.product_info import ProductInfo
-from advertsapi.ad_info import AdInfo
+from AdvertsAPI.product_info import ProductInfo
+from AdvertsAPI.ad_info import AdInfo
 
 class AdvertsAPI:
 
