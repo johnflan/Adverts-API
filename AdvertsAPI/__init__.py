@@ -99,6 +99,8 @@ class AdvertsAPI:
     def search_query(self, query=None):
         if query is None and self.search is not None:
             query = self.search
+        elif query is not None:
+            query = query
         else:
             print('no search query!')
             return None

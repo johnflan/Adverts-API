@@ -15,5 +15,5 @@ with open('secret.json', 'r') as f:
     password = js['password']
 
 advert.login(username, password)
-ads = advert.search_query()
+ads = advert.search_query('graphics card')
 advert.logout()
