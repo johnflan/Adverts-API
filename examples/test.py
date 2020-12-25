@@ -4,9 +4,10 @@ sys.path.append('./')
 import json
 
 import AdvertsAPI as ads
+from AdvertsAPI import category
 from AdvertsAPI.utils import pretty_json
 
-advert = ads.AdvertsAPI(county='Dublin', search='graphics card')
+advert = ads.AdvertsAPI(county='Dublin')
 
 with open('secret.json', 'r') as f:
     js = json.load(f)
@@ -14,6 +15,5 @@ with open('secret.json', 'r') as f:
     password = js['password']
 
 advert.login(username, password)
-ads = advert.search()
-print(ads[0].title)
+ads = advert.search_query()
 advert.logout()

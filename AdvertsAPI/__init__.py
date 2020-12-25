@@ -96,9 +96,12 @@ class AdvertsAPI:
             print('You dont have any offers')
 
 
-    def search(self, query=None):
-        if query is None:
+    def search_query(self, query=None):
+        if query is None and self.search is not None:
             query = self.search
+        else:
+            print('no search query!')
+            return None
         return self.get_ad_panel(f"""{self.__query_url}{query.replace(' ', '+')}""")
         
 
