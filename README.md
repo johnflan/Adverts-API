@@ -94,7 +94,7 @@ However you could also pass in the url of the search and it will compute for you
 ads = advert.get_ad_panel('https://www.adverts.ie/for-sale/price_0-0/')
 ```
 
-It will return a list of the top 30 ads for that search. You can print them as follows below, or use them to decide on weither you want to place an offer or not.
+It will return a list of the top 30 ads for that search. The attributes that can be retreived are: `price`, `title`, `area`, `county`, `category` and `url`
 
 ``` python
 for ad in ads:
