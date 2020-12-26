@@ -91,4 +91,16 @@ Withdraws an offer to a particular ad, given the url. Only works if you have pla
 
 ## Usage
 
-For documented examples see [examples.py](https://github.com/ahmedhamedaly/AdvertsAPI/blob/master/examples/examples.py)
+For documented examples see [examples.py](https://github.com/ahmedhamedaly/Adverts-API/blob/master/examples/examples.py)
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+## Roadmap
+
+See the [open issues](https://github.com/ahmedhamedaly/Adverts-API/issues) for a list of proposed features (and known issues).
+
+## License
+
+Distributed under the [MIT](https://github.com/ahmedhamedaly/Adverts-API/blob/master/LICENSE) License. See `LICENSE` for more information.

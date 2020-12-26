@@ -74,12 +74,15 @@ class AdvertsAPI:
             print('You need to be logged in to place an offer')
             return
         
-        offer_url = self.__generate_offer_url(ad_url, offer)
-        self.br.open(offer_url)
+        
+            offer_url = self.__generate_offer_url(ad_url, offer)
+            self.br.open(offer_url)
 
-        self.br.select_form(nr=0)
-        self.br.submit()
-    
+            self.br.select_form(nr=0)
+        try:    
+            self.br.submit()
+        except:
+            print('Invalid Link to Place Offer!')
 
     def withdraw_offer(self, ad_url):
         if self.__loggedIn is not True:
@@ -110,17 +113,20 @@ class AdvertsAPI:
     def full_ad_info(self, ad_url):
         info = self.__bsoup(ad_url)
         
-        return AdInfo(
-            info.findAll("h1", {"class": "page_heading"})[0].text.strip(),
-            info.findAll("span", {"class": "ad_view_info_cell"})[0].text.strip(),
-            info.findAll("a", {"class": "inverted sellername"})[0].text.strip(),
-            info.findAll("span", {"class": "positive"})[0].text.strip(),
-            info.findAll("span", {"class": "negative"})[0].text.strip(),
-            info.findAll("dd", {"class": "ad_view_info_cell"})[2].text.strip(),
-            info.findAll("dd", {"class": "ad_view_info_cell"})[3].text.strip(),
-            info.findAll("dd", {"class": "ad_view_info_cell"})[4].text.strip(),
-            info.findAll("div", {"class": "main-description"})[0].text.strip()
-        )
+        try:
+            return AdInfo(
+                info.findAll("h1", {"class": "page_heading"})[0].text.strip(),
+                info.findAll("span", {"class": "ad_view_info_cell"})[0].text.strip(),
+                info.findAll("a", {"class": "inverted sellername"})[0].text.strip(),
+                info.findAll("span", {"class": "positive"})[0].text.strip(),
+                info.findAll("span", {"class": "negative"})[0].text.strip(),
+                info.findAll("dd", {"class": "ad_view_info_cell"})[2].text.strip(),
+                info.findAll("dd", {"class": "ad_view_info_cell"})[3].text.strip(),
+                info.findAll("dd", {"class": "ad_view_info_cell"})[4].text.strip(),
+                info.findAll("div", {"class": "main-description"})[0].text.strip()
+            )
+        except:
+            print('Seems like you input the wrong ad url')
 
 
     def get_ad_panel(self, url=None):
