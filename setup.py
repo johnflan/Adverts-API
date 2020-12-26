@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="AdvertsAPI",
-    version="0.0.1",
+    version="1.0.1",
     author="Ahmed Hamed Aly",
     author_email="hamedala@tcd.ie",
     description="An unofficial API for the community based Irish marketplace, adverts.ie",
