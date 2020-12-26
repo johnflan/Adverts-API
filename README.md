@@ -30,7 +30,7 @@ from AdvertsAPI.category import Category
 from AdvertsAPI.utils import pretty_json
 ```
 
-## Available Functions
+## Available Methods
 
 * Constructor
 * login
@@ -43,20 +43,33 @@ from AdvertsAPI.utils import pretty_json
 
 ## Constructor
 
+**Default:** category=None, county=None, min_price=0, max_price=0, view='grid_view', search=None
+
 ``` python
-## Default: category=None, county=None, min_price=0, max_price=0, view='grid_view', search=None
 advert = AdvertsAPI.AdvertsAPI()
+```
 
-## Bike in Dublin: category=Category.SPORTS_FITNESS__BIKES, county='Dublin', min_price=0, max_price=0, view='grid_view', search=None
+**Bike in Dublin:** category=Category.SPORTS_FITNESS__BIKES, county='Dublin', min_price=0, max_price=0, view='grid_view', search=None
+
+``` python
 advert = AdvertsAPI.AdvertsAPI(category=Category.SPORTS_FITNESS__BIKES, county='Dublin')
+```
 
-## Mountain bike in Dublin: category=Category.SPORTS_FITNESS__BIKES, county='Dublin', min_price=0, max_price=0, view='grid_view', search='mountain'
+**Mountain bike in Dublin:** category=Category.SPORTS_FITNESS__BIKES, county='Dublin', min_price=0, max_price=0, view='grid_view', search='mountain'
+
+``` python
 advert = AdvertsAPI.AdvertsAPI(category=Category.SPORTS_FITNESS__BIKES, county='Dublin', search='mountain')
+```
 
-## ps4 between 100-300 euro: category=Category.CONSOLES_GAMES, county=None, min_price=100, max_price=300, view='grid_view', search='ps4'
+**ps4 between 100-300 euro:** category=Category.CONSOLES_GAMES, county=None, min_price=100, max_price=300, view='grid_view', search='ps4'
+
+``` python
 advert = AdvertsAPI.AdvertsAPI(category=Category.CONSOLES_GAMES, min_price=100, max_price=300, search='ps4')
+```
 
-## free items in Dublin: category=None, county='Dublin', min_price=0, max_price=0, view='grid_view', search=None
+**free items in Dublin:** category=None, county='Dublin', min_price=0, max_price=0, view='grid_view', search=None
+
+``` python
 advert = AdvertsAPI.AdvertsAPI(county='Dublin')
 ```
 
@@ -69,17 +82,21 @@ adverts.login('username', 'password')
 
 ## get_ad_panel
 
+**NOTE:** given the contructor details, it will produce the url for the search.
+
 ``` python
-# get_ad_panel
-ads = advert.get_ad_panel()    # NOTE: given the contructor details, it will produce the url for the search
-
-# get_ad_panel: (given a search url)
-ads = advert.get_ad_panel('https://www.adverts.ie/for-sale/price_0-0/')
-
+ads = advert.get_ad_panel()
 ```
 
+However you could also pass in the url of the search and it will compute for you.
+
 ``` python
-# top 30 ads
+ads = advert.get_ad_panel('https://www.adverts.ie/for-sale/price_0-0/')
+```
+
+It will return a list of the top 30 ads for that search. You can print them as follows below, or use them to decide on weither you want to place an offer or not.
+
+``` python
 for ad in ads:
     print(ad.price)
     print(ad.title)
@@ -91,40 +108,41 @@ for ad in ads:
 
 ## place_offer
 
-Places an offer given the url of the ad or uses the ad url when initiating the class.
+This will place an offer given the url of the ad directly.
+
+Below is an example given a url that is static.
 
 ``` python
-# place_offer 
 advert.place_offer('ad_url', 100)   
-# NOTE: it will place an offer below the ask if given an offer above the asking price.
 ```
 
+Below will place an offer on the first ad of the ads retreieved [above](#get_ad_panel).
+
 ``` python
-# place_offer (from ad_panels)
 advert.place_offer(ads[0].url, 0)
 ```
 
 ## withdraw_offer
 
-Withdraws an offer to a particular ad, given the url. Only works if you have places an ad.
+Withdraws an offer to a particular ad, given the url. You must have an active offer to withdraw the ad.
 
 ``` python
-# withdraw_offer
 advert.withdraw_offer('ad_url')    
-# NOTE: you must have an active offer placed
 ```
 
 ## full_ad_info
 
+This will return all the information of the ad given the url. The attributes that can be retreived are: `title`, `price`, `seller`, `positive`, `negative`, `location` `date_entered`, `ad_views` and `description`.
+
 ``` python
-# full_ad_info 
 advert.full_ad_info('ad_url')
 ```
 
 ``` python
-# full_ad_info (from ad_panels)
 ads = advert.full_ad_info(ads[0].url)
 ```
+
+You can retreive the data as follows:
 
 ``` python
 for ad in ads:
@@ -141,15 +159,20 @@ for ad in ads:
 
 ## search_query
 
+Search query will use the constructor generated url to search for ads.
+
 ``` python
-# search_query (using constructor search)
 advert.search_query()
 ```
+
+However you can pass a search query to the method and it will return the search results of the query.
 
 ``` python
 # search_query (given query)
 ads = advert.search_query('mountain bikes')
 ```
+
+Similar to the [get_ad_panel](#get_ad_panel) method, you can retreive the data as below:
 
 ``` python
 for ad in ads:
@@ -159,6 +182,8 @@ for ad in ads:
 ```
 
 ## logout
+
+Not very necessary as it will discard the cookies as the program stops.
 
 ``` python
 adverts.logout()
