@@ -1,5 +1,5 @@
 class ProductInfo:
-    def __init__(self, price, title, area, county, category, url):
+    def __init__(self, price, title, area, county, category, url, advert_id):
         super().__init__()
         self.__price = price
         self.__title = title
@@ -7,6 +7,7 @@ class ProductInfo:
         self.__county = county
         self.__category = category
         self.__url = url
+        self.__advert_id = advert_id
     
     @property
     def price(self):
@@ -31,3 +32,7 @@ class ProductInfo:
     @property
     def url(self):
         return self.__url
+    
+    @property
+    def advert_id(self):
+        return self.__advert_id

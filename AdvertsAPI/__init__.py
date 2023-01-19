@@ -26,6 +26,7 @@ class AdvertsAPI:
     __county_tag = "div[class='location'] > a"
     __category_tag = "div[class='location'] > a"
     __url_tag = "div[class='price'] > a"
+    __advert_id = "button"
 
     def __init__(self, category=None, county=None, min_price=0, max_price=0, view='grid_view', search=None):
         super().__init__()
@@ -145,7 +146,8 @@ class AdvertsAPI:
                     panel.select(self.__area_Tag)[0].text.strip(), 
                     panel.select(self.__county_tag)[1].text.strip(), 
                     panel.select(self.__category_tag)[0]['href'].split('/')[2:-4], 
-                    f"""https://adverts.ie{panel.select(self.__url_tag)[0]['href']}"""
+                    f"""https://adverts.ie{panel.select(self.__url_tag)[0]['href']}""",
+                    panel.select(self.__advert_id)[0]['data-ad-id']
                             )
                     )
 
